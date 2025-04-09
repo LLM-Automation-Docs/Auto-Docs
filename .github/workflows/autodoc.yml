@@ -46,6 +46,7 @@ jobs:
           git push origin main
 
       - name: Upload generated docs as artifact
+        if: exists('docs/auto-doc.md')
         uses: actions/upload-artifact@v3
         with:
           name: api-docs
