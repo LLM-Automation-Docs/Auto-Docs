@@ -5,8 +5,9 @@ import os
 
 # Pobierz zmienione pliki z ostatniego commita
 diff_files = subprocess.check_output(
-    ["git", "diff", "--name-only", "HEAD~1", "HEAD"]
+    ["git", "diff", "--name-only", "FETCH_HEAD^", "FETCH_HEAD"]
 ).decode().splitlines()
+
 
 # Filtrowanie po nazwie pliku
 changed_files = [f for f in diff_files if f.endswith(".kt")]
@@ -15,8 +16,9 @@ print(changed_files)
 
 # 3. Pobierz diff treść tych plików
 diff_text = subprocess.check_output(
-    ["git", "diff", "HEAD~1", "HEAD", "--"] + changed_files
+    ["git", "diff", "FETCH_HEAD^", "FETCH_HEAD", "--"] + changed_files
 ).decode()
+
 
 if not diff_text.strip():
     print("Brak zmian w plikach .kt")
