@@ -23,13 +23,18 @@ jobs:
       - name: Generate docs using LLM
         run: python scripts/generate_doc.py
 
+      - name: Upload generated docs as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-docs
+          path: docs/auto-doc.md
+
       - name: Commit and push updated docs to main using PAT
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
         run: |
           git config --global user.name "Auto Docs Bot"
           git config --global user.email "autodocs@example.com"
-
           git add docs/auto-doc.md
 
           # Commit only if there are changes
@@ -39,14 +44,5 @@ jobs:
           fi
 
           git commit -m "🤖 Auto-update API docs"
-
-          # Set remote URL with token
           git remote set-url origin https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }}.git
-
           git push origin main
-
-      - name: Upload generated docs as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: api-docs
-          path: docs/auto-doc.md
