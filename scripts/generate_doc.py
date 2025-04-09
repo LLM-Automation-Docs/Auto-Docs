@@ -43,7 +43,7 @@ print(changed_files)
 code_parts = []
 for file in changed_files:
     content = read_file_content(file)
-    code_parts.append(f"Plik: {file}\n```python\n{content}\n```")
+    code_parts.append(f"Plik: {file}\n```kotlin\n{content}\n```")
 
 changed_code = "\n\n".join(code_parts)
 existing_docs = read_existing_docs()
