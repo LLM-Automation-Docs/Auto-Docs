@@ -11,8 +11,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          persist-credentials: true  # wymagane do pusha
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -25,18 +23,24 @@ jobs:
       - name: Generate docs using LLM
         run: python scripts/generate_doc.py
 
-      - name: Commit and push updated docs to main
+      - name: Commit and push updated docs to main using PAT
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "Auto Docs Bot"
+          git config --global user.email "autodocs@example.com"
 
           git add docs/auto-doc.md
 
-          # Commit tylko jeśli są zmiany
+          # Commit only if there are changes
           if git diff --cached --quiet; then
-            echo "Brak zmian do commitowania."
+            echo "No changes to commit."
             exit 0
           fi
 
           git commit -m "🤖 Auto-update API docs"
+
+          # Set remote URL with token
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
+
           git push origin main
