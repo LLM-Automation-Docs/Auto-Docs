@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          persist-credentials: true  # wymagane do pusha
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -22,3 +24,19 @@ jobs:
 
       - name: Generate docs using LLM
         run: python scripts/generate_doc.py
+
+      - name: Commit and push updated docs to main
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add docs/auto-doc.md
+
+          # Commit tylko jeśli są zmiany
+          if git diff --cached --quiet; then
+            echo "Brak zmian do commitowania."
+            exit 0
+          fi
+
+          git commit -m "🤖 Auto-update API docs"
+          git push origin main
