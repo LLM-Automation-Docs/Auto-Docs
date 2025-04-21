@@ -37,9 +37,13 @@ def read_existing_docs():
 diff_files = get_changed_files()
 
 # Filtrowanie po nazwie pliku
-changed_files = [f for f in diff_files if f.endswith(".kt")]
+changed_files = diff_files
 print("Changed files:")
 print(changed_files)
+
+if not changed_files:
+    print("Brak zmian w plikach .kt, pomijam generowanie dokumentacji.")
+    exit(0)
 
 code_parts = []
 for file in changed_files:
