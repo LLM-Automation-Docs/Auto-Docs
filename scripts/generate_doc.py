@@ -69,7 +69,7 @@ Zwróć kompletną dokumentację po aktualizacji:
 
 print(prompt)
 
-result = generate_response(prompt)
+result = "Tymczasowo puste" #generate_response(prompt)
 
 # 6. Zapisz do pliku
 os.makedirs("docs", exist_ok=True)
