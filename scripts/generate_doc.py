@@ -58,7 +58,7 @@ Oto aktualna dokumentacja REST API:
 
 Poniżej znajduje się zmodyfikowany kod źródłowy.
 Zaktualizuj powyższą dokumentację tak, aby uwzględniała **tylko zmiany związane z poniższymi plikami**.
-Nie powielaj już istniejących wpisów – dodaj tylko nowe/zmienione lub zaktualizuj istniejące jeśli trzeba.
+Nie powielaj już istniejących wpisów – dodaj tylko nowe/zmienione lub zaktualizuj istniejące jeśli trzeba. Nie pisz nic poza tekstem dokumentacji.
 
 --- BEGIN CHANGED CODE ---
 {changed_code}
