@@ -47,4 +47,5 @@ jobs:
 
           git commit -m "🤖 Auto-update API docs"
           git remote set-url origin https://maciekpawlowski1:$GH_PAT@github.com/LLM-Automation-Docs/Auto-Docs.git
+          git remote -v
           git push origin main
