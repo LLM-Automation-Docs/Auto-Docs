@@ -21,6 +21,8 @@ jobs:
         run: pip install requests google-generativeai
 
       - name: Generate docs using LLM
+        env:
+          LLAMA_KEY: ${{ secrets.LLAMA_KEY }}
         run: python scripts/generate_doc.py
 
       - name: Upload generated docs as artifact
@@ -31,7 +33,7 @@ jobs:
 
       - name: Commit and push updated docs to main using PAT
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           git config --global user.name "Auto Docs Bot"
           git config --global user.email "autodocs@example.com"
