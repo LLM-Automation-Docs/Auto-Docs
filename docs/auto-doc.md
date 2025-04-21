@@ -19,6 +19,13 @@ Klasa danych `Taxi` reprezentuje taksówkę i posiada następujące pola:
 Klasa danych `Car` reprezentuje samochód i posiada następujące pola:
 
 * **`id`**: `Int` - identyfikator samochodu.
-* **`name`**: `String` - nazwa samochodu.
 * **`model`**: `String` - model samochodu.
 * **`year`**: `Int` - rok produkcji samochodu.
+
+## CarRentalService
+
+Interfejs `CarRentalService` definiuje metody:
+
+* **`isOpenNow()`**: Zwraca wartość booleanową wskazującą, czy wypożyczalnia jest obecnie otwarta.
+* **`getAvailableCars()`**: Zwraca listę dostępnych obiektów `Car`.
+* **`getCar(id: Int)`**: Zwraca obiekt `Car` o podanym identyfikatorze lub null, jeśli samochód nie istnieje.
