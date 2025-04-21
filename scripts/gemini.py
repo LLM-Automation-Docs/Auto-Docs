@@ -10,7 +10,7 @@ model = genai.GenerativeModel('models/gemini-1.5-flash')#gemini-1.5-flash
 def generate_response(prompt):
     print("Pytam gemini..")
     response = model.generate_content(prompt)
-    print("Odpowiedź gemini: " + response)
+    print(response.text)
     return response.text
 
 # Przykładowe użycie
