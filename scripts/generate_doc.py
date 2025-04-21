@@ -1,6 +1,7 @@
 import subprocess
 import requests
 import os
+from gemini import generate_response
 
 DOC_PATH = "docs/auto-doc.md"
 
@@ -68,7 +69,7 @@ Zwróć kompletną dokumentację po aktualizacji:
 
 print(prompt)
 
-result = "Dokumentacja będzie tutaj"
+result = generate_response(prompt)
 
 # 6. Zapisz do pliku
 os.makedirs("docs", exist_ok=True)

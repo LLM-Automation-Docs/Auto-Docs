@@ -1,4 +1,4 @@
 interface RestService {
 
-    fun isActive(): Boolean // Test
+    fun isActive(): Boolean
 }
