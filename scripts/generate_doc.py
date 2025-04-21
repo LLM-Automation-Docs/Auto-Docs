@@ -10,13 +10,15 @@ def get_changed_files():
     try:
         # Spróbuj HEAD~1
         subprocess.check_output(["git", "rev-parse", "HEAD~1"])
-        base_commit = "HEAD~1"
+        base_commit = os.environ.get("GITHUB_EVENT_BEFORE", "HEAD~1")
     except subprocess.CalledProcessError:
         # Jeśli to pierwszy commit
         base_commit = subprocess.check_output(
             ["git", "rev-list", "--max-parents=0", "HEAD"]
         ).decode().strip()
 
+    print("Checking since commit:")
+    print(base_commit)
     changed_files = subprocess.check_output(
         ["git", "diff", "--name-only", base_commit, "HEAD"]
     ).decode().splitlines()
