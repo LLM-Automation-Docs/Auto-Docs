@@ -18,7 +18,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install requests
+        run: pip install requests google-generativeai
 
       - name: Generate docs using LLM
         run: python scripts/generate_doc.py
