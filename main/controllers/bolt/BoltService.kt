@@ -1,6 +1,6 @@
 package main.controllers.bolt
 
-interface TaxiService {
+interface BoltService {
 
     fun isActive(): Boolean
 
