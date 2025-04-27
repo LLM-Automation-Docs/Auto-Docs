@@ -34,7 +34,7 @@ class main.controllers.bolt.Taxi {
     -phone : String
 }
 
-interface main.controllers.bolt.TaxiService {
+interface main.controllers.bolt.BoltService {
     +isActive() : Boolean
     +getTaxis() : List<Taxi>
 }

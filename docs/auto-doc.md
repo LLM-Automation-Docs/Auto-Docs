@@ -39,9 +39,9 @@ Klasa danych `Worker` reprezentuje pracownika i posiada następujące pola:
 * **`salary`**: `Double` - pensja pracownika.
 * **`profession`**: `String` - zawód pracownika.
 
-## TaxiService
+## BoltService
 
-Interfejs `TaxiService` definiuje metody:
+Interfejs `BoltService` definiuje metody:
 
 * **`isActive()`**: Zwraca wartość booleanową wskazującą, czy usługa jest aktywna.
 * **`getTaxis()`**: Zwraca listę obiektów `Taxi`.
