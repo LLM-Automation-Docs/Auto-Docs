@@ -6,28 +6,30 @@ from gemini import generate_response
 DOC_PATH = "docs/auto-doc.md"
 
 
-def get_changed_files():
+def get_base_commit():
+    """Pobierz commit przed zmianami (start)."""
+    return os.environ.get("GITHUB_EVENT_BEFORE", "HEAD~1")
+
+def get_changed_files(base_commit):
+    """Pobierz listę zmienionych plików .kt między base_commit a HEAD."""
+    output = subprocess.check_output(["git", "diff", "--name-status", base_commit, "HEAD"]).decode()
+    changes = []
+    for line in output.strip().split("\n"):
+        status, path = line.split("\t", 1)
+        if path.endswith(".kt"):
+            changes.append((status, path))
+    return changes
+
+def get_file_content(revision, path):
+    """Pobierz treść pliku z danego commita lub aktualną."""
     try:
-        # Spróbuj HEAD~1
-        subprocess.check_output(["git", "rev-parse", "HEAD~1"])
-        base_commit = os.environ.get("GITHUB_EVENT_BEFORE", "HEAD~1")
-    except subprocess.CalledProcessError:
-        # Jeśli to pierwszy commit
-        base_commit = subprocess.check_output(
-            ["git", "rev-list", "--max-parents=0", "HEAD"]
-        ).decode().strip()
-
-    print("Checking since commit:")
-    print(base_commit)
-    changed_files = subprocess.check_output(
-        ["git", "diff", "--name-only", base_commit, "HEAD"]
-    ).decode().splitlines()
-
-    return [f for f in changed_files if f.endswith(".kt") and os.path.exists(f)]
-
-def read_file_content(filepath):
-    with open(filepath, "r", encoding="utf-8") as f:
-        return f.read()
+        if revision == "WORKSPACE":
+            with open(path, "r", encoding="utf-8") as f:
+                return f.read()
+        else:
+            return subprocess.check_output(["git", "show", f"{revision}:{path}"]).decode()
+    except Exception:
+        return None  # Plik może nie istnieć w tym commicie
 
 def read_existing_docs():
     if os.path.exists(DOC_PATH):
@@ -36,25 +38,46 @@ def read_existing_docs():
     return ""
 
 
-diff_files = get_changed_files()
+# 1. Przygotowanie commitów
+base_commit = get_base_commit()
+print(f"Porównujemy zmiany od {base_commit} do HEAD.")
 
-# Filtrowanie po nazwie pliku
-changed_files = diff_files
-print("Changed files:")
+# 2. Wykrycie zmian
+changed_files = get_changed_files(base_commit)
+print("Zmodyfikowane pliki .kt:")
 print(changed_files)
 
 if not changed_files:
     print("Brak zmian w plikach .kt, pomijam generowanie dokumentacji.")
     exit(0)
 
+
+
+# 3. Przygotowanie sekcji zmienionych plików
 code_parts = []
-for file in changed_files:
-    content = read_file_content(file)
-    code_parts.append(f"Plik: {file}\n```kotlin\n{content}\n```")
+for status, path in changed_files:
+    old_content = get_file_content(base_commit, path)
+    new_content = get_file_content("WORKSPACE", path)  # aktualna wersja na dysku
+
+    if old_content is None and new_content is None:
+        continue  # Plik usunięty i brak nowej wersji? Pomijamy
+
+    part = f"Plik: {path}\n"
+
+    if old_content and new_content:
+        part += f"--- STARY KOD ---\n```kotlin\n{old_content}\n```\n\n"
+        part += f"--- NOWY KOD ---\n```kotlin\n{new_content}\n```"
+    elif old_content and not new_content:
+        part += f"--- USUNIĘTY PLIK ---\n```kotlin\n{old_content}\n```"
+    elif new_content and not old_content:
+        part += f"--- NOWY PLIK ---\n```kotlin\n{new_content}\n```"
+
+    code_parts.append(part)
 
 changed_code = "\n\n".join(code_parts)
 existing_docs = read_existing_docs()
 
+# 4. Przygotowanie prompta
 prompt = f"""
 Oto aktualna dokumentacja REST API:
 
@@ -62,19 +85,21 @@ Oto aktualna dokumentacja REST API:
 {existing_docs}
 --- END CURRENT DOCS ---
 
-Poniżej znajduje się zmodyfikowany kod źródłowy.
-Zaktualizuj powyższą dokumentację tak, aby uwzględniała **tylko zmiany związane z poniższymi plikami**.
-Nie powielaj już istniejących wpisów – dodaj tylko nowe/zmienione lub zaktualizuj istniejące jeśli trzeba. Nie pisz nic poza tekstem dokumentacji.
+Poniżej znajduje się porównanie zmienionych plików Kotlin.
+Zaktualizuj dokumentację tak, aby uwzględniała **dodane, zmienione oraz usunięte elementy**.
+Nie powielaj istniejących wpisów — popraw istniejące lub usuń je jeśli dotyczą usuniętego kodu.
 
---- BEGIN CHANGED CODE ---
+--- BEGIN CHANGES ---
 {changed_code}
---- END CHANGED CODE ---
+--- END CHANGES ---
 
-Zwróć kompletną dokumentację po aktualizacji:
+Zwróć kompletną, zaktualizowaną dokumentację (bez komentarzy ani wyjaśnień):
 """
 
+print("Generuję prompt dla LLM...")
 print(prompt)
 
+# 5. Wywołanie LLM
 result = generate_response(prompt)
 
 # 6. Zapisz do pliku
@@ -82,4 +107,4 @@ os.makedirs("docs", exist_ok=True)
 with open(DOC_PATH, "w") as f:
     f.write(result)
 
-print("Dokumentacja zapisana w " + DOC_PATH)
+print(f"✅ Dokumentacja wygenerowana i zapisana w {DOC_PATH}")
