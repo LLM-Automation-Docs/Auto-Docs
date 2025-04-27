@@ -1,4 +1,4 @@
-package main.controllers.taxi
+package main.controllers.bolt
 
 interface TaxiService {
 

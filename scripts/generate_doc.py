@@ -16,9 +16,31 @@ def get_changed_files(base_commit):
     output = subprocess.check_output(["git", "diff", "--name-status", base_commit, "HEAD"]).decode()
     changes = []
     for line in output.strip().split("\n"):
-        status, path = line.split("\t", 1)
-        if path.endswith(".kt"):
-            changes.append((status, path))
+        parts = line.split("\t")
+        status = parts[0]
+
+        if status.startswith('R') or status.startswith('C'):
+            # Rename lub Copy - 3 kolumny: status, stara_ścieżka, nowa_ścieżka
+            old_path = parts[1]
+            new_path = parts[2]
+
+            if new_path.endswith(".kt"):
+                changes.append(("renamed", old_path, new_path))
+        elif status == 'M':
+            # Modyfikacja
+            path = parts[1]
+            if path.endswith(".kt"):
+                changes.append(("modified", path))
+        elif status == 'A':
+            # Nowy plik
+            path = parts[1]
+            if path.endswith(".kt"):
+                changes.append(("added", path))
+        elif status == 'D':
+            # Usunięty plik
+            path = parts[1]
+            if path.endswith(".kt"):
+                changes.append(("deleted", path))
     return changes
 
 def get_file_content(revision, path):
@@ -62,14 +84,21 @@ if not changed_files:
 
 # 3. Przygotowanie sekcji zmienionych plików
 code_parts = []
-for status, path in changed_files:
-    old_content = get_file_content(base_commit, path)
-    new_content = get_file_content("WORKSPACE", path)  # aktualna wersja na dysku
+for change in changed_files:
+    if change[0] == "renamed":
+        old_path = change[1]
+        new_path = change[2]
+    else:
+        old_path = change[1]
+        new_path = change[1]
+
+    old_content = get_file_content(base_commit, old_path)
+    new_content = get_file_content("WORKSPACE", new_path)  # aktualna wersja na dysku
 
     if old_content is None and new_content is None:
         continue  # Plik usunięty i brak nowej wersji? Pomijamy
 
-    part = f"Plik: {path}\n"
+    part = f"Plik: {new_path}\n"
 
     if old_content and new_content:
         part += f"--- STARY KOD ---\n```kotlin\n{old_content}\n```\n\n"
@@ -80,6 +109,7 @@ for status, path in changed_files:
         part += f"--- NOWY PLIK ---\n```kotlin\n{new_content}\n```"
 
     code_parts.append(part)
+
 
 changed_code = "\n\n".join(code_parts)
 existing_docs = read_existing_docs()

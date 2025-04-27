@@ -1,4 +1,4 @@
-package main.controllers.taxi
+package main.controllers.bolt
 
 data class Taxi(
     val id: String,
