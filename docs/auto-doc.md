@@ -26,6 +26,7 @@ Klasa danych `Car` reprezentuje samochód i posiada następujące pola:
 
 Interfejs `CarRentalService` definiuje metody:
 
-* **`isOpenNow()`**: Zwraca wartość booleanową wskazującą, czy wypożyczalnia jest obecnie otwarta.
-* **`getAvailableCars()`**: Zwraca listę dostępnych obiektów `Car`.
-* **`getCar(id: Int)`**: Zwraca obiekt `Car` o podanym identyfikatorze lub null, jeśli samochód nie istnieje.
+* **`isOpenNow()`**: Zwraca wartość booleanową wskazującą, czy wypożyczalnia jest obecnie otwarta.  Metoda jest teraz zawieszająca (suspend).
+* **`getAvailableCars()`**: Zwraca listę dostępnych obiektów `Car`. Metoda jest teraz zawieszająca (suspend).
+* **`getCar(id: Int)`**: Zwraca obiekt `Car` o podanym identyfikatorze lub null, jeśli samochód nie istnieje. Metoda jest teraz zawieszająca (suspend).
+
