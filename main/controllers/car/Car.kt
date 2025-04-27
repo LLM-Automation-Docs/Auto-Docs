@@ -5,4 +5,5 @@ data class Car(
     val model: String,
     val year: Int,
     val maxSpeed: Int,
+    val acceleration: Int,
 )

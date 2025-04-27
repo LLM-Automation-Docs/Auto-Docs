@@ -1,6 +1,6 @@
-package main.controllers
+package main.controllers.taxi
 
-interface RestService {
+interface TaxiService {
 
     fun isActive(): Boolean
 

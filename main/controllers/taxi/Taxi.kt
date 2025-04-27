@@ -1,4 +1,4 @@
-package main.controllers
+package main.controllers.taxi
 
 data class Taxi(
     val id: String,
