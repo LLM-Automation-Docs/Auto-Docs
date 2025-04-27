@@ -30,3 +30,12 @@ Interfejs `CarRentalService` definiuje metody:
 * **`isOpenNow()`**: Zwraca wartość booleanową wskazującą, czy wypożyczalnia jest otwarta.
 * **`getAvailableCars()`**: Zwraca listę dostępnych obiektów `Car`.
 * **`getCar(id: Int)`**: Zwraca obiekt `Car` o podanym identyfikatorze lub null, jeśli samochód nie istnieje.
+
+## Worker
+
+Klasa danych `Worker` reprezentuje pracownika i posiada następujące pola:
+
+* **`name`**: `String` - imię pracownika.
+* **`surname`**: `String` - nazwisko pracownika.
+* **`salary`**: `Double` - pensja pracownika.
+* **`profession`**: `String` - zawód pracownika.

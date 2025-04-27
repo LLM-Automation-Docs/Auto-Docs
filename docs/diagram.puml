@@ -1,0 +1,8 @@
+@startuml
+class main.controllers.car.Worker {
+    -name : String
+    -surname : String
+    -salary : Double
+    -profession : String
+}
+@enduml
