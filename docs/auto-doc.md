@@ -22,14 +22,20 @@ Klasa danych `Car` reprezentuje samochód i posiada następujące pola:
 * **`model`**: `String` - model samochodu.
 * **`year`**: `Int` - rok produkcji samochodu.
 * **`maxSpeed`**: `Int` - maksymalna prędkość samochodu.
+* **`acceleration`**: `Int` - przyspieszenie samochodu.
 
 ## CarRentalService
 
-Interfejs `CarRentalService` definiuje metody:
+Klasa `CarRentalService` implementuje interfejs `ICarRentalService`.
+
+## ICarRentalService
+
+Interfejs `ICarRentalService` definiuje metody:
 
 * **`isOpenNow()`**: Zwraca wartość booleanową wskazującą, czy wypożyczalnia jest otwarta.
 * **`getAvailableCars()`**: Zwraca listę dostępnych obiektów `Car`.
 * **`getCar(id: Int)`**: Zwraca obiekt `Car` o podanym identyfikatorze lub null, jeśli samochód nie istnieje.
+* **`getCarByModel(model: String)`**: Zwraca obiekt `Car` o podanym modelu lub null, jeśli samochód nie istnieje.
 
 ## Worker
 

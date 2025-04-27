@@ -1,4 +1,26 @@
 @startuml
+class main.controllers.car.Car {
+    -id : Int
+    -model : String
+    -year : Int
+    -maxSpeed : Int
+    -acceleration : Int
+}
+
+interface main.controllers.car.ICarRentalService {
+    +isOpenNow() : Boolean
+    +getAvailableCars() : List<Car>
+    +getCar(id : Int) : Car
+    +getCarByModel(model : String) : Car
+}
+
+class main.controllers.car.CarRentalService implements main.controllers.car.ICarRentalService {
+    +isOpenNow() : Boolean
+    +getAvailableCars() : List<Car>
+    +getCar(id : Int) : Car
+    +getCarByModel(model : String) : Car
+}
+
 class main.controllers.car.Worker {
     -name : String
     -surname : String
