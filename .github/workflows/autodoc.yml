@@ -23,6 +23,17 @@ jobs:
       - name: Install dependencies
         run: pip install requests google-generativeai
 
+      - name: ☕ Install Java (required for PlantUML)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: 📦 Install PlantUML
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y plantuml graphviz
+
       - name: Generate docs using LLM
         env:
           LLAMA_KEY: ${{ secrets.LLAMA_KEY }}
@@ -40,7 +51,7 @@ jobs:
         run: |
           git config --global user.name "Auto Docs Bot"
           git config --global user.email "autodocs@example.com"
-          git add docs/auto-doc.md
+          git add docs/
 
           # Commit only if there are changes
           if git diff --cached --quiet; then
@@ -48,6 +59,6 @@ jobs:
             exit 0
           fi
 
-          git commit -m "🤖 Auto-update API docs"
+          git commit -m "🤖 Auto-update API docs" || echo "No changes to commit"
           git remote set-url origin https://maciekpawlowski1:$GH_PAT@github.com/LLM-Automation-Docs/Auto-Docs.git
           git push origin main

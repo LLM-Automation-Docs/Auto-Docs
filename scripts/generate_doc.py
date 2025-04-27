@@ -4,7 +4,8 @@ import os
 from gemini import generate_response
 
 DOC_PATH = "docs/auto-doc.md"
-
+PUML_PATH = "docs/diagram.puml"
+PNG_PATH = "docs/diagram.png"
 
 def get_base_commit():
     """Pobierz commit przed zmianami (start)."""
@@ -77,7 +78,7 @@ for status, path in changed_files:
 changed_code = "\n\n".join(code_parts)
 existing_docs = read_existing_docs()
 
-# 4. Przygotowanie prompta
+# 4. Przygotowanie prompta Markdown
 prompt = f"""
 Oto aktualna dokumentacja REST API:
 
@@ -96,15 +97,62 @@ Nie powielaj istniejących wpisów — popraw istniejące lub usuń je jeśli do
 Zwróć kompletną, zaktualizowaną dokumentację (bez komentarzy ani wyjaśnień):
 """
 
-print("Generuję prompt dla LLM...")
+print("Prompt dla Markdown:")
 print(prompt)
 
-# 5. Wywołanie LLM
+# 5. Wywołanie LLM Markdown
+print("Generuję dokumentację Markdown...")
 result = generate_response(prompt)
 
-# 6. Zapisz do pliku
+# 6. Zapisz do pliku Markdown
 os.makedirs("docs", exist_ok=True)
 with open(DOC_PATH, "w") as f:
     f.write(result)
 
-print(f"✅ Dokumentacja wygenerowana i zapisana w {DOC_PATH}")
+print(f"✅ Dokumentacja Markdown wygenerowana i zapisana w {DOC_PATH}")
+
+
+# 7. Przygotowanie prompta SysML
+existing_puml = read_existing_file(PUML_PATH)
+
+prompt_puml = f"""
+Oto aktualny diagram SysML (w formacie PlantUML):
+
+--- BEGIN CURRENT DIAGRAM ---
+{existing_puml}
+--- END CURRENT DIAGRAM ---
+
+Poniżej znajduje się porównanie zmienionych plików Kotlin.
+Zaktualizuj diagram tak, aby uwzględniał **dodane, zmienione oraz usunięte klasy, interfejsy oraz ich relacje**.
+
+--- BEGIN CHANGES ---
+{changed_code}
+--- END CHANGES ---
+
+Uwagi:
+- Zachowaj wszystkie istniejące poprawne elementy, ale usuń te, których już nie ma.
+- Dodaj nowe klasy/interfejsy i relacje jeśli pojawiły się w zmianach.
+- Używaj poprawnej składni PlantUML (otocz `@startuml` i `@enduml`).
+- Nie pisz żadnych dodatkowych wyjaśnień ani opisów.
+"""
+# 8. Wywołanie LLM SysML
+print("Generuję diagram PlantUML...")
+result_puml = generate_response(prompt_puml)
+
+# 9 Zapis do pliku SysML
+os.makedirs("docs", exist_ok=True)
+with open(PUML_PATH, "w", encoding="utf-8") as f:
+    f.write(result_puml)
+
+print(f"✅ Diagram PlantUML zapisany w {PUML_PATH}")
+
+
+# 10. Wygeneruj PNG z PUML
+def render_puml_to_png(input_path, output_path):
+    try:
+        subprocess.run(["plantuml", "-tpng", "-o", ".", input_path], check=True)
+        print(f"✅ Diagram PNG wygenerowany w {output_path}")
+    except Exception as e:
+        print(f"❌ Błąd przy generowaniu diagramu PNG: {e}")
+
+render_puml_to_png(PUML_PATH, PNG_PATH)
