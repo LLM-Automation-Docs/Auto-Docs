@@ -38,6 +38,12 @@ def read_existing_docs():
             return f.read()
     return ""
 
+def read_existing_diagram():
+    if os.path.exists(PUML_PATH):
+        with open(PUML_PATH, "r", encoding="utf-8") as f:
+            return f.read()
+    return ""
+
 
 # 1. Przygotowanie commitów
 base_commit = get_base_commit()
@@ -113,7 +119,7 @@ print(f"✅ Dokumentacja Markdown wygenerowana i zapisana w {DOC_PATH}")
 
 
 # 7. Przygotowanie prompta SysML
-existing_puml = read_existing_file(PUML_PATH)
+existing_puml = read_existing_diagram()
 
 prompt_puml = f"""
 Oto aktualny diagram SysML (w formacie PlantUML):
