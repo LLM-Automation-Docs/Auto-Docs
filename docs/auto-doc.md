@@ -1,11 +1,5 @@
 ## RestService
 
-Interfejs `RestService` definiuje metody:
-
-* **`isActive()`**: Zwraca wartość booleanową wskazującą, czy usługa jest aktywna.
-* **`getCars()`**: Zwraca listę obiektów `Car`.
-
-
 ## Taxi
 
 Klasa danych `Taxi` reprezentuje taksówkę i posiada następujące pola:
