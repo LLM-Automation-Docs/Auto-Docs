@@ -3,7 +3,6 @@
 Interfejs `RestService` definiuje metody:
 
 * **`isActive()`**: Zwraca wartość booleanową wskazującą, czy usługa jest aktywna.
-* **`getTaxis()`**: Zwraca listę obiektów `Taxi`.
 * **`getCars()`**: Zwraca listę obiektów `Car`.
 
 
@@ -45,3 +44,10 @@ Klasa danych `Worker` reprezentuje pracownika i posiada następujące pola:
 * **`surname`**: `String` - nazwisko pracownika.
 * **`salary`**: `Double` - pensja pracownika.
 * **`profession`**: `String` - zawód pracownika.
+
+## TaxiService
+
+Interfejs `TaxiService` definiuje metody:
+
+* **`isActive()`**: Zwraca wartość booleanową wskazującą, czy usługa jest aktywna.
+* **`getTaxis()`**: Zwraca listę obiektów `Taxi`.

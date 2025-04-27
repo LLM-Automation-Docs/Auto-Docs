@@ -1,3 +1,4 @@
+```plantuml
 @startuml
 class main.controllers.car.Car {
     -id : Int
@@ -27,4 +28,15 @@ class main.controllers.car.Worker {
     -salary : Double
     -profession : String
 }
+
+class main.controllers.bolt.Taxi {
+    -id : String
+    -phone : String
+}
+
+interface main.controllers.bolt.TaxiService {
+    +isActive() : Boolean
+    +getTaxis() : List<Taxi>
+}
 @enduml
+```
