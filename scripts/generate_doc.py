@@ -6,6 +6,8 @@ from gemini import generate_response
 DOC_PATH = "docs/auto-doc.md"
 PUML_PATH = "docs/diagram.puml"
 PNG_PATH = "docs/diagram.png"
+ACTIVITY_PUML_PATH = "docs/activity_diagram.puml"
+ACTIVITY_PNG_PATH = "docs/activity_diagram.png"
 
 def get_base_commit():
     """Pobierz commit przed zmianami (start)."""
@@ -63,6 +65,12 @@ def read_existing_docs():
 def read_existing_diagram():
     if os.path.exists(PUML_PATH):
         with open(PUML_PATH, "r", encoding="utf-8") as f:
+            return f.read()
+    return ""
+
+def read_existing_activity_diagram():
+    if os.path.exists(ACTIVITY_PUML_PATH):
+        with open(ACTIVITY_PUML_PATH, "r", encoding="utf-8") as f:
             return f.read()
     return ""
 
@@ -192,3 +200,36 @@ def render_puml_to_png(input_path, output_path):
         print(f"❌ Błąd przy generowaniu diagramu PNG: {e}")
 
 render_puml_to_png(PUML_PATH, PNG_PATH)
+
+
+# ---- Diagram Aktywności ----
+existing_activity = read_existing_activity_diagram()
+
+prompt_activity = f"""
+Wygeneruj diagram aktywności w formacie PlantUML dla funkcji/metod zawartych w kodzie Kotlin.
+Skup się na metodach publicznych (np. kontrolerach REST).
+
+--- BEGIN CURRENT DIAGRAM ---
+{existing_activity}
+--- END CURRENT DIAGRAM ---
+
+--- BEGIN CHANGES ---
+{changed_code}
+--- END CHANGES ---
+
+Zasady:
+- Dla każdej funkcji/metody wygeneruj osobny diagram aktywności.
+- Każdy diagram zaczynaj od @startuml i kończ @enduml.
+- Używaj notacji activity diagramów w PlantUML (start -> akcje -> end).
+- Jeśli metoda jest usunięta, usuń ją z diagramu.
+- Nie pisz komentarzy, tylko czysty kod PlantUML.
+"""
+
+print("Generuję diagram aktywności (PlantUML)...")
+activity_result = generate_response(prompt_activity)
+
+with open(ACTIVITY_PUML_PATH, "w", encoding="utf-8") as f:
+    f.write(activity_result)
+
+print(f"✅ Diagram aktywności zapisany w {ACTIVITY_PUML_PATH}")
+render_puml_to_png(ACTIVITY_PUML_PATH, ACTIVITY_PNG_PATH)
