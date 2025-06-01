@@ -8,6 +8,8 @@ PUML_PATH = "docs/diagram.puml"
 PNG_PATH = "docs/diagram.png"
 ACTIVITY_PUML_PATH = "docs/activity_diagram.puml"
 ACTIVITY_PNG_PATH = "docs/activity_diagram.png"
+SEQUENCE_PUML_PATH = "docs/sequence_diagram.puml"
+SEQUENCE_PNG_PATH = "docs/sequence_diagram.png"
 
 def get_base_commit():
     """Pobierz commit przed zmianami (start)."""
@@ -71,6 +73,13 @@ def read_existing_diagram():
 def read_existing_activity_diagram():
     if os.path.exists(ACTIVITY_PUML_PATH):
         with open(ACTIVITY_PUML_PATH, "r", encoding="utf-8") as f:
+            return f.read()
+    return ""
+
+
+def read_existing_sequence_diagram():
+    if os.path.exists(SEQUENCE_PUML_PATH):
+        with open(SEQUENCE_PUML_PATH, "r", encoding="utf-8") as f:
             return f.read()
     return ""
 
@@ -233,3 +242,41 @@ with open(ACTIVITY_PUML_PATH, "w", encoding="utf-8") as f:
 
 print(f"✅ Diagram aktywności zapisany w {ACTIVITY_PUML_PATH}")
 render_puml_to_png(ACTIVITY_PUML_PATH, ACTIVITY_PNG_PATH)
+
+
+# ---- Diagram Sekwencji ----
+
+existing_sequence = read_existing_sequence_diagram()
+
+prompt_sequence = f"""
+Oto aktualny diagram sekwencji (w formacie PlantUML):
+
+--- BEGIN CURRENT DIAGRAM ---
+{existing_sequence}
+--- END CURRENT DIAGRAM ---
+
+Poniżej znajduje się porównanie zmienionych plików Kotlin.
+Wygeneruj lub zaktualizuj diagram sekwencji, przedstawiając **interakcje pomiędzy klasami/interfejsami oraz wywołania metod**.
+
+Uwzględnij szczególnie wywołania metod publicznych oraz przepływ informacji między obiektami.
+
+--- BEGIN CHANGES ---
+{changed_code}
+--- END CHANGES ---
+
+Uwagi:
+- Zachowaj poprzednie fragmenty jeśli nadal są aktualne.
+- Jeśli obiekt/metoda została usunięta — usuń ją z diagramu.
+- Używaj poprawnej składni PlantUML dla diagramu sekwencji (`@startuml` / `@enduml`).
+- Nie dodawaj żadnych komentarzy ani wyjaśnień.
+"""
+
+print("Generuję diagram sekwencji PlantUML...")
+result_sequence = generate_response(prompt_sequence)
+
+with open(SEQUENCE_PUML_PATH, "w", encoding="utf-8") as f:
+    f.write(result_sequence)
+
+print(f"✅ Diagram sekwencji zapisany w {SEQUENCE_PUML_PATH}")
+
+render_puml_to_png(SEQUENCE_PUML_PATH, SEQUENCE_PNG_PATH)
