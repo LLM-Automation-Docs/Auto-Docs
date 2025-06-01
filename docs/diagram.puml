@@ -1,6 +1,6 @@
 ```plantuml
 @startuml
-class main.controller.car.Car {
+class main.controllers.car.Car {
     -id : Int
     -model : String
     -year : Int
@@ -8,33 +8,33 @@ class main.controller.car.Car {
     -acceleration : Int
 }
 
-interface main.controller.car.ICarRentalService {
+interface main.controllers.car.ICarRentalService {
     +isOpenNow() : Boolean
     +getAvailableCars() : List<Car>
     +getCar(id : Int) : Car?
     +getCarByModel(model : String) : Car?
 }
 
-class main.controller.car.CarRentalService implements main.controller.car.ICarRentalService {
+class main.controllers.car.CarRentalService implements main.controllers.car.ICarRentalService {
     +isOpenNow() : Boolean
     +getAvailableCars() : List<Car>
     +getCar(id : Int) : Car?
     +getCarByModel(model : String) : Car?
 }
 
-class main.controller.car.Worker {
+class main.controllers.car.Worker {
     -name : String
     -surname : String
     -salary : Double
     -profession : String
 }
 
-class main.controller.bolt.Taxi {
+class main.controllers.bolt.Taxi {
     -id : String
     -phone : String
 }
 
-interface main.controller.bolt.BoltService {
+interface main.controllers.bolt.BoltService {
     +isActive() : Boolean
     +getTaxis() : List<Taxi>
 }
@@ -47,6 +47,6 @@ class main.repository.CarRepository implements main.repository.ICarRepository {
     +getCars() : List<Car>
 }
 
-main.controller.car.CarRentalService -- main.repository.ICarRepository
+main.controllers.car.CarRentalService -- main.repository.ICarRepository
 @enduml
 ```

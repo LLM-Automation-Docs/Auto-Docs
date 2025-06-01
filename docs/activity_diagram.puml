@@ -56,10 +56,4 @@ else (false)
 endif
 stop
 @enduml
-
-@startuml
-start
-:getCars();
-:return List<Car>;
-stop
 @enduml

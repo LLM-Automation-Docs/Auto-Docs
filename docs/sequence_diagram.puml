@@ -1,0 +1,21 @@
+```plantuml
+@startuml
+actor Client
+participant CarRentalService
+participant CarRepository
+participant Car
+
+Client -> CarRentalService: getAvailableCars()
+activate CarRentalService
+CarRentalService -> CarRepository: getCars()
+activate CarRepository
+CarRepository -> Car: create Car object
+activate Car
+deactivate Car
+CarRepository --> CarRentalService: List<Car>
+deactivate CarRepository
+CarRentalService --> Client: List<Car>
+deactivate CarRentalService
+
+@enduml
+```
