@@ -1,6 +1,6 @@
 ```plantuml
 @startuml
-class main.controllers.car.Car {
+class main.controller.car.Car {
     -id : Int
     -model : String
     -year : Int
@@ -8,35 +8,45 @@ class main.controllers.car.Car {
     -acceleration : Int
 }
 
-interface main.controllers.car.ICarRentalService {
+interface main.controller.car.ICarRentalService {
     +isOpenNow() : Boolean
     +getAvailableCars() : List<Car>
-    +getCar(id : Int) : Car
-    +getCarByModel(model : String) : Car
+    +getCar(id : Int) : Car?
+    +getCarByModel(model : String) : Car?
 }
 
-class main.controllers.car.CarRentalService implements main.controllers.car.ICarRentalService {
+class main.controller.car.CarRentalService implements main.controller.car.ICarRentalService {
     +isOpenNow() : Boolean
     +getAvailableCars() : List<Car>
-    +getCar(id : Int) : Car
-    +getCarByModel(model : String) : Car
+    +getCar(id : Int) : Car?
+    +getCarByModel(model : String) : Car?
 }
 
-class main.controllers.car.Worker {
+class main.controller.car.Worker {
     -name : String
     -surname : String
     -salary : Double
     -profession : String
 }
 
-class main.controllers.bolt.Taxi {
+class main.controller.bolt.Taxi {
     -id : String
     -phone : String
 }
 
-interface main.controllers.bolt.BoltService {
+interface main.controller.bolt.BoltService {
     +isActive() : Boolean
     +getTaxis() : List<Taxi>
 }
+
+interface main.repository.ICarRepository {
+    +getCars() : List<Car>
+}
+
+class main.repository.CarRepository implements main.repository.ICarRepository {
+    +getCars() : List<Car>
+}
+
+main.controller.car.CarRentalService -- main.repository.ICarRepository
 @enduml
 ```

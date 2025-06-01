@@ -1,0 +1,65 @@
+@startuml
+start
+:isActive();
+if (isActive()) then (true)
+  :return true;
+else (false)
+  :return false;
+endif
+stop
+@enduml
+
+@startuml
+start
+:getTaxis();
+:return List<Taxi>;
+stop
+@enduml
+
+@startuml
+start
+:isOpenNow();
+:return true;
+stop
+@enduml
+
+@startuml
+start
+:getAvailableCars();
+:carRepository.getCars();
+:return List<Car>;
+stop
+@enduml
+
+@startuml
+start
+:getCar(id: Int);
+:getAvailableCars();
+:find { it.id == id };
+if (found) then (true)
+  :return Car;
+else (false)
+  :return null;
+endif
+stop
+@enduml
+
+@startuml
+start
+:getCarByModel(model: String);
+:getAvailableCars();
+:find { it.model == model };
+if (found) then (true)
+  :return Car;
+else (false)
+  :return null;
+endif
+stop
+@enduml
+
+@startuml
+start
+:getCars();
+:return List<Car>;
+stop
+@enduml
