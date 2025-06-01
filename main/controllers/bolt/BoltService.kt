@@ -1,4 +1,4 @@
-package main.controller.bolt
+package main.controllers.bolt
 
 interface BoltService {
 

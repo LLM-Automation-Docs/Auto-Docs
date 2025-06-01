@@ -1,4 +1,4 @@
-package main.controller.car
+package main.controllers.car
 
 import main.repository.ICarRepository
 

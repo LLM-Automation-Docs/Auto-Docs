@@ -1,6 +1,6 @@
 package main.repository
 
-import main.controller.car.Car
+import main.controllers.car.Car
 
 class CarRepository: ICarRepository {
     override suspend fun getCars(): List<Car> = listOf(

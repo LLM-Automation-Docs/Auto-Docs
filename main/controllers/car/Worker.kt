@@ -1,4 +1,4 @@
-package main.controller.car
+package main.controllers.car
 
 data class Worker(
     val name: String,

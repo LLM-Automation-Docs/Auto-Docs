@@ -1,4 +1,4 @@
-package main.controller.car
+package main.controllers.car
 
 interface ICarRentalService {
     suspend fun isOpenNow(): Boolean
